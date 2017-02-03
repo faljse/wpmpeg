@@ -12,6 +12,8 @@ This is where you craft a short, punchy description of your plugin
 
 == Description ==
 
+ffmpeg -i 00002.MTS -f mpeg1video -vf "scale=512:288, crop=iw-mod(iw\,2):ih-mod(ih\,2)" -b:v 800k  out.mpg
+
 This is where you can give a much longer description of your plugin that you can use to explain just how it awesome it really is.
 
 == Installation ==

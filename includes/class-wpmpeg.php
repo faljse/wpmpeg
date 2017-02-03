@@ -112,7 +112,9 @@ class wpmpeg {
 		// Handle localisation
 		$this->load_plugin_textdomain();
 		add_action( 'init', array( $this, 'load_localisation' ), 0 );
-		add_filter('upload_mimes', array( $this, 'ability_to_upload');
+		add_filter('upload_mimes', array( $this, 'ability_to_upload'));
+		add_shortcode( 'wpmpeg', array( $this, 'wpmpeg_func' ));
+
 
 	} // End __construct ()
 
@@ -121,6 +123,26 @@ class wpmpeg {
  		$mimes['mpg'] = 'video/mpeg';
 		return $mimes;
 	}
+
+	// [bartag foo="foo-value"]
+	public function wpmpeg_func( $atts ) {
+		$a = shortcode_atts( array(
+			'url' => '',
+			'width' => '640',
+			'height' => '360',
+			'loop' => 'true',
+		), $atts );
+
+		$canvas="canvas" .  substr(md5($a['url']),0,8);
+		$out="\n";
+		$out.="<canvas id=\"". $canvas ."\" style=\"width:". $a['width'] ."px;height:". $a['height'] ."px;\" ></canvas>\n";
+		$out.="<script>\n";
+		$out.="var ". $canvas ." = document.getElementById('". $canvas ."');\n";
+		$out.="new jsmpeg(\"". $a['url'] ."\", {canvas: ". $canvas .", autoplay: true, loop: true, progressive: true});\n";
+		$out.="</script>";
+		return $out;
+	}
+
 
 	/**
 	 * Wrapper function to register a new post type
